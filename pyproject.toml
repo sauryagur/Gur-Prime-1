@@ -1,0 +1,13 @@
+[project]
+name = "gurgpt"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "datasets>=4.3.0",
+    "marimo>=0.23.9",
+    "torch>=2.10.0",
+    "trl>=0.24.0",
+    "unsloth>=2026.6.1",
+]
