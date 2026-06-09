@@ -1,0 +1,93 @@
+{
+  "version": "1",
+  "metadata": {
+    "marimo_version": "0.23.9",
+    "script_metadata_hash": null
+  },
+  "cells": [
+    {
+      "id": "Hbol",
+      "code_hash": "a6075a67a4192415b71e1e40baee61e4",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "jXdv",
+      "code_hash": "d4dfd9343d2ec014fd305986351ca60f",
+      "outputs": [
+        {
+          "type": "error",
+          "ename": "interruption",
+          "evalue": "This cell was interrupted and needs to be re-run",
+          "traceback": []
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "MWEx",
+      "code_hash": "2e72dffd91718a9610e5c8ce0e9dfc1b",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<pre class='text-xs'>Qwen2Tokenizer(name_or_path=&#x27;unsloth/Qwen3-1.7B-bnb-4bit&#x27;, vocab_size=151643, model_max_length=40960, padding_side=&#x27;left&#x27;, truncation_side=&#x27;right&#x27;, special_tokens={&#x27;eos_token&#x27;: &#x27;&lt;|im_end|&gt;&#x27;, &#x27;pad_token&#x27;: &#x27;&lt;|vision_pad|&gt;&#x27;}, added_tokens_decoder={\n\t151643: AddedToken(&quot;&lt;|endoftext|&gt;&quot;, rstrip=False, lstrip=False, single_word=False, normalized=False, special=True),\n\t151644: AddedToken(&quot;&lt;|im_start|&gt;&quot;, rstrip=False, lstrip=False, single_word=False, normalized=False, special=True),\n\t151645: AddedToken(&quot;&lt;|im_end|&gt;&quot;, rstrip=False, lstrip=False, single_word=False, normalized=False, special=True),\n\t151646: AddedToken(&quot;&lt;|object_ref_start|&gt;&quot;, rstrip=False, lstrip=False, single_word=False, normalized=False, special=True),\n\t151647: AddedToken(&quot;&lt;|object_ref_end|&gt;&quot;, rstrip=False, lstrip=False, single_word=False, normalized=False, special=True),\n\t151648: AddedToken(&quot;&lt;|box_start|&gt;&quot;, rstrip=False, lstrip=False, single_word=False, normalized=False, special=True),\n\t151649: AddedToken(&quot;&lt;|box_end|&gt;&quot;, rstrip=False, lstrip=False, single_word=False, normalized=False, special=True),\n\t151650: AddedToken(&quot;&lt;|quad_start|&gt;&quot;, rstrip=False, lstrip=False, single_word=False, normalized=False, special=True),\n\t151651: AddedToken(&quot;&lt;|quad_end|&gt;&quot;, rstrip=False, lstrip=False, single_word=False, normalized=False, special=True),\n\t151652: AddedToken(&quot;&lt;|vision_start|&gt;&quot;, rstrip=False, lstrip=False, single_word=False, normalized=False, special=True),\n\t151653: AddedToken(&quot;&lt;|vision_end|&gt;&quot;, rstrip=False, lstrip=False, single_word=False, normalized=False, special=True),\n\t151654: AddedToken(&quot;&lt;|vision_pad|&gt;&quot;, rstrip=False, lstrip=False, single_word=False, normalized=False, special=True),\n\t151655: AddedToken(&quot;&lt;|image_pad|&gt;&quot;, rstrip=False, lstrip=False, single_word=False, normalized=False, special=True),\n\t151656: AddedToken(&quot;&lt;|video_pad|&gt;&quot;, rstrip=False, lstrip=False, single_word=False, normalized=False, special=True),\n\t151657: AddedToken(&quot;&lt;tool_call&gt;&quot;, rstrip=False, lstrip=False, single_word=False, normalized=False, special=False),\n\t151658: AddedToken(&quot;&lt;/tool_call&gt;&quot;, rstrip=False, lstrip=False, single_word=False, normalized=False, special=False),\n\t151659: AddedToken(&quot;&lt;|fim_prefix|&gt;&quot;, rstrip=False, lstrip=False, single_word=False, normalized=False, special=False),\n\t151660: AddedToken(&quot;&lt;|fim_middle|&gt;&quot;, rstrip=False, lstrip=False, single_word=False, normalized=False, special=False),\n\t151661: AddedToken(&quot;&lt;|fim_suffix|&gt;&quot;, rstrip=False, lstrip=False, single_word=False, normalized=False, special=False),\n\t151662: AddedToken(&quot;&lt;|fim_pad|&gt;&quot;, rstrip=False, lstrip=False, single_word=False, normalized=False, special=False),\n\t151663: AddedToken(&quot;&lt;|repo_name|&gt;&quot;, rstrip=False, lstrip=False, single_word=False, normalized=False, special=False),\n\t151664: AddedToken(&quot;&lt;|file_sep|&gt;&quot;, rstrip=False, lstrip=False, single_word=False, normalized=False, special=False),\n\t151665: AddedToken(&quot;&lt;tool_response&gt;&quot;, rstrip=False, lstrip=False, single_word=False, normalized=False, special=False),\n\t151666: AddedToken(&quot;&lt;/tool_response&gt;&quot;, rstrip=False, lstrip=False, single_word=False, normalized=False, special=False),\n\t151667: AddedToken(&quot;&lt;think&gt;&quot;, rstrip=False, lstrip=False, single_word=False, normalized=False, special=False),\n\t151668: AddedToken(&quot;&lt;/think&gt;&quot;, rstrip=False, lstrip=False, single_word=False, normalized=False, special=False),\n})</pre>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "FDyG",
+      "code_hash": "424f8515444c4e592f4f579fa0d0de94",
+      "outputs": [
+        {
+          "type": "error",
+          "ename": "interruption",
+          "evalue": "This cell was interrupted and needs to be re-run",
+          "traceback": []
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "GrBk",
+      "code_hash": "e22e630e8216e7d6a2642a36b109c52e",
+      "outputs": [
+        {
+          "type": "error",
+          "ename": "interruption",
+          "evalue": "This cell was interrupted and needs to be re-run",
+          "traceback": []
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "eZLs",
+      "code_hash": "3f544447c49cf4ec7b338cc1e11db0fb",
+      "outputs": [
+        {
+          "type": "error",
+          "ename": "interruption",
+          "evalue": "This cell was interrupted and needs to be re-run",
+          "traceback": []
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "oQOG",
+      "code_hash": null,
+      "outputs": [],
+      "console": []
+    }
+  ]
+}
