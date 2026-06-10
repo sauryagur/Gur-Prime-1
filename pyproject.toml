@@ -17,4 +17,5 @@ dependencies = [
     "trl>=0.24.0",
     "unsloth>=2026.6.1",
     "wandb>=0.27.2",
+    "weave>=0.52.42",
 ]
