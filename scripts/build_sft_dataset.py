@@ -5,43 +5,53 @@ INPUT = "data/insta-conversations.jsonl"
 OUTPUT = "data/insta-sft.jsonl"
 
 WINDOW_TURNS = 8
+STEP = 2
 
-MIN_ASSISTANT_CHARS = 2
+MIN_ASSISTANT_CHARS = 5
+
+BAD_SHORT_RESPONSES = {
+    "ok", "okay", "k", "lol", "lmao", "👍", "😂"
+}
+
+
+def normalize_role(role: str) -> str:
+    role = role.lower().strip()
+
+    if role == "saurya":
+        return "assistant"
+    if role == "friend":
+        return "user"
+
+    return None
 
 
 def is_good_target(text: str) -> bool:
-    text = text.strip()
-    return len(text) >= MIN_ASSISTANT_CHARS
+    text = (text or "").strip()
+    if len(text) < MIN_ASSISTANT_CHARS:
+        return False
+    if text.lower() in BAD_SHORT_RESPONSES:
+        return False
+    return True
 
 
 def merge_turns(messages):
     turns = []
 
     for msg in messages:
-        role = msg["role"]
-        content = msg["content"].strip()
+        role = msg.get("role")
+        content = (msg.get("content") or "").strip()
 
-        if not content:
+        if not role or not content:
             continue
 
-        if not turns:
-            turns.append(
-                {
-                    "role": role,
-                    "content": content,
-                }
-            )
+        role = normalize_role(role)
+        if role is None:
             continue
 
-        if role == turns[-1]["role"]:
-            turns[-1]["content"] += "\n" + content
+        if not turns or turns[-1]["role"] != role:
+            turns.append({"role": role, "content": content})
         else:
-            turns.append(
-                {
-                    "role": role,
-                    "content": content,
-                }
-            )
+            turns[-1]["content"] += "\n" + content
 
     return turns
 
@@ -49,55 +59,61 @@ def merge_turns(messages):
 def build_examples(messages):
     turns = merge_turns(messages)
 
+    assistant_indices = [
+        i for i, t in enumerate(turns)
+        if t["role"] == "assistant" and is_good_target(t["content"])
+    ]
+
     examples = []
 
-    for i, turn in enumerate(turns):
-        # Only train on Saurya responses
-        if turn["role"] != "saurya":
-            continue
-
-        if not is_good_target(turn["content"]):
-            continue
-
+    for i in assistant_indices[::STEP]:
         start = max(0, i - WINDOW_TURNS + 1)
-
-        context = turns[start : i + 1]
-
-        # Remove leading saurya turns
-        # We want contexts to start from a friend whenever possible
-        while context and context[0]["role"] == "saurya":
-            context = context[1:]
+        context = turns[start:i + 1]
 
         if len(context) < 2:
             continue
 
-        # Must end with saurya
-        if context[-1]["role"] != "saurya":
+        # must end in assistant
+        if context[-1]["role"] != "assistant":
             continue
 
-        # Must contain at least one friend turn
-        if not any(t["role"] == "friend" for t in context):
+        # must include at least one user message
+        if not any(t["role"] == "user" for t in context[:-1]):
             continue
 
-        examples.append({"messages": context})
+        # ensure alternating sanity (no broken structure)
+        cleaned = []
+        prev_role = None
+
+        for t in context:
+            if t["role"] == prev_role:
+                # merge accidental duplicates
+                cleaned[-1]["content"] += "\n" + t["content"]
+            else:
+                cleaned.append(t)
+                prev_role = t["role"]
+
+        if len(cleaned) < 2:
+            continue
+
+        examples.append({"messages": cleaned})
 
     return examples
 
 
 def main():
+    Path(OUTPUT).parent.mkdir(parents=True, exist_ok=True)
+
     total_conversations = 0
     total_examples = 0
 
-    Path(OUTPUT).parent.mkdir(parents=True, exist_ok=True)
-
-    with (
-        open(INPUT, encoding="utf-8") as infile,
-        open(OUTPUT, "w", encoding="utf-8") as outfile,
-    ):
+    with open(INPUT, encoding="utf-8") as infile, open(OUTPUT, "w", encoding="utf-8") as outfile:
         for line in infile:
             conv = json.loads(line)
-
             messages = conv.get("messages", [])
+
+            if not isinstance(messages, list) or len(messages) < 2:
+                continue
 
             examples = build_examples(messages)
 
@@ -107,7 +123,7 @@ def main():
             total_examples += len(examples)
             total_conversations += 1
 
-    print(f"Conversations: {total_conversations}")
+    print(f"Conversations processed: {total_conversations}")
     print(f"Training examples: {total_examples}")
     print(f"Saved to: {OUTPUT}")
 
