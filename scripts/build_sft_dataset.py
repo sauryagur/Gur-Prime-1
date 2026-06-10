@@ -4,42 +4,82 @@ from pathlib import Path
 INPUT = "data/insta-conversations.jsonl"
 OUTPUT = "data/insta-sft.jsonl"
 
-# max messages to keep in context
-WINDOW_MESSAGES = 12
+WINDOW_TURNS = 8
 
-# discard extremely short assistant replies
 MIN_ASSISTANT_CHARS = 2
 
 
 def is_good_target(text: str) -> bool:
     text = text.strip()
+    return len(text) >= MIN_ASSISTANT_CHARS
 
-    if len(text) < MIN_ASSISTANT_CHARS:
-        return False
 
-    return True
+def merge_turns(messages):
+    turns = []
+
+    for msg in messages:
+        role = msg["role"]
+        content = msg["content"].strip()
+
+        if not content:
+            continue
+
+        if not turns:
+            turns.append(
+                {
+                    "role": role,
+                    "content": content,
+                }
+            )
+            continue
+
+        if role == turns[-1]["role"]:
+            turns[-1]["content"] += "\n" + content
+        else:
+            turns.append(
+                {
+                    "role": role,
+                    "content": content,
+                }
+            )
+
+    return turns
 
 
 def build_examples(messages):
+    turns = merge_turns(messages)
+
     examples = []
 
-    for i, msg in enumerate(messages):
-        if msg["role"] != "saurya":
+    for i, turn in enumerate(turns):
+        # Only train on Saurya responses
+        if turn["role"] != "saurya":
             continue
 
-        target = msg["content"]
-
-        if not is_good_target(target):
+        if not is_good_target(turn["content"]):
             continue
 
-        start = max(0, i - WINDOW_MESSAGES + 1)
+        start = max(0, i - WINDOW_TURNS + 1)
 
-        sample = messages[start : i + 1]
+        context = turns[start : i + 1]
 
-        if len(sample) < 2:
+        # Remove leading saurya turns
+        # We want contexts to start from a friend whenever possible
+        while context and context[0]["role"] == "saurya":
+            context = context[1:]
+
+        if len(context) < 2:
             continue
 
-        examples.append({"messages": sample})
+        # Must end with saurya
+        if context[-1]["role"] != "saurya":
+            continue
+
+        # Must contain at least one friend turn
+        if not any(t["role"] == "friend" for t in context):
+            continue
+
+        examples.append({"messages": context})
 
     return examples
 
@@ -57,7 +97,9 @@ def main():
         for line in infile:
             conv = json.loads(line)
 
-            examples = build_examples(conv["messages"])
+            messages = conv.get("messages", [])
+
+            examples = build_examples(messages)
 
             for ex in examples:
                 outfile.write(json.dumps(ex, ensure_ascii=False) + "\n")
