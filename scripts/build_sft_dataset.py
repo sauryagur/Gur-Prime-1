@@ -9,9 +9,7 @@ STEP = 2
 
 MIN_ASSISTANT_CHARS = 5
 
-BAD_SHORT_RESPONSES = {
-    "ok", "okay", "k", "lol", "lmao", "👍", "😂"
-}
+BAD_SHORT_RESPONSES = {"ok", "okay", "k", "lol", "lmao", "👍", "😂"}
 
 
 def normalize_role(role: str) -> str:
@@ -60,7 +58,8 @@ def build_examples(messages):
     turns = merge_turns(messages)
 
     assistant_indices = [
-        i for i, t in enumerate(turns)
+        i
+        for i, t in enumerate(turns)
         if t["role"] == "assistant" and is_good_target(t["content"])
     ]
 
@@ -68,7 +67,7 @@ def build_examples(messages):
 
     for i in assistant_indices[::STEP]:
         start = max(0, i - WINDOW_TURNS + 1)
-        context = turns[start:i + 1]
+        context = turns[start : i + 1]
 
         if len(context) < 2:
             continue
@@ -107,7 +106,10 @@ def main():
     total_conversations = 0
     total_examples = 0
 
-    with open(INPUT, encoding="utf-8") as infile, open(OUTPUT, "w", encoding="utf-8") as outfile:
+    with (
+        open(INPUT, encoding="utf-8") as infile,
+        open(OUTPUT, "w", encoding="utf-8") as outfile,
+    ):
         for line in infile:
             conv = json.loads(line)
             messages = conv.get("messages", [])

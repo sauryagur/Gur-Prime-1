@@ -10,5 +10,5 @@ model, tokenizer = FastLanguageModel.from_pretrained(
 model.save_pretrained_gguf(
     "outputs-gguf",
     tokenizer,
-    quantization_method="q4_k_m"  # good balance of size/quality
+    quantization_method="q4_k_m",  # good balance of size/quality
 )
